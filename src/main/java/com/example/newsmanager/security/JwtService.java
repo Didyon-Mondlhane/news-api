@@ -48,5 +48,18 @@ public class JwtService {
         }
     }
 
+    public String getRoleFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("news-api")
+                    .build()
+                    .verify(token)
+                    .getClaim("role").asString();
+        } catch (JWTVerificationException exception) {
+            return "";
+        }
+    }
+
 
 }
