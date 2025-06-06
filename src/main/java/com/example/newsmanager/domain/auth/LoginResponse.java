@@ -1,5 +1,3 @@
 package com.example.newsmanager.domain.auth;
 
-public class LoginResponse {
-    
-}
+public record LoginResponse(String token) {}
