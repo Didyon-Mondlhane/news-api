@@ -2,6 +2,7 @@ package com.example.newsmanager.controllers;
 
 import com.example.newsmanager.domain.auth.*;
 import com.example.newsmanager.security.JwtService;
+import com.example.newsmanager.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtService jwtService;
@@ -33,5 +36,9 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponse(token));
     }
 
-
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest registerRequest) {
+        userService.registerUser(registerRequest);
+        return ResponseEntity.ok().build();
+    }
 }
