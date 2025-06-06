@@ -1,64 +1,66 @@
 package com.example.newsmanager.services;
 
-import com.example.newsmanager.domain.category.*;
+import com.example.newsmanager.domain.category.Category;
+import com.example.newsmanager.domain.category.CategoryDTO;
 import com.example.newsmanager.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CategoryService {
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepository repository;
 
-    // Métodos CRUD serão implementados aqui
+    public CategoryService(CategoryRepository repository) {
+        this.repository = repository;
+    }
+
     public List<CategoryDTO> getAllCategories() {
-        return categoryRepository.findAll()
-                .stream()
+        return repository.findAll().stream()
                 .map(CategoryDTO::new)
                 .collect(Collectors.toList());
     }
 
     public CategoryDTO getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
         return new CategoryDTO(category);
     }
 
     @Transactional
-    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        if (categoryRepository.existsByName(categoryDTO.name())) {
-            throw new RuntimeException("Category name already exists");
+    public CategoryDTO createCategory(CategoryDTO dto) {
+        if (repository.existsByName(dto.name())) {
+            throw new RuntimeException("O nome da categoria já existe");
         }
 
-        Category newCategory = Category.builder()
-                .name(categoryDTO.name())
-                .description(categoryDTO.description())
+        Category category = Category.builder()
+                .name(dto.name())
+                .description(dto.description())
                 .build();
 
-        Category savedCategory = categoryRepository.save(newCategory);
+        Category savedCategory = repository.save(category);
         return new CategoryDTO(savedCategory);
     }
 
     @Transactional
-    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+    public CategoryDTO updateCategory(Long id, CategoryDTO dto) {
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
-        category.setName(categoryDTO.name());
-        category.setDescription(categoryDTO.description());
+        category.setName(dto.name());
+        category.setDescription(dto.description());
 
-        Category updatedCategory = categoryRepository.save(category);
+        Category updatedCategory = repository.save(category);
         return new CategoryDTO(updatedCategory);
     }
 
     @Transactional
     public void deleteCategory(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category not found");
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Categoria não encontrada");
         }
-        categoryRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }
