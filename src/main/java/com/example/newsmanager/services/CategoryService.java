@@ -14,4 +14,18 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     // Métodos CRUD serão implementados aqui
+    @Transactional
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        if (categoryRepository.existsByName(categoryDTO.name())) {
+            throw new RuntimeException("Category name already exists");
+        }
+
+        Category newCategory = Category.builder()
+                .name(categoryDTO.name())
+                .description(categoryDTO.description())
+                .build();
+
+        Category savedCategory = categoryRepository.save(newCategory);
+        return new CategoryDTO(savedCategory);
+    }
 }
