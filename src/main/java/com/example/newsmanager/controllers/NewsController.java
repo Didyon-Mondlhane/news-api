@@ -24,7 +24,7 @@ public class NewsController {
         return ResponseEntity.ok(newsList);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<NewsResponseDTO> getNewsById(@PathVariable String id) {
         NewsResponseDTO news = newsService.getById(id);
         return ResponseEntity.ok(news);
