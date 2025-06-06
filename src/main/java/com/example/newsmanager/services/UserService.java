@@ -4,11 +4,16 @@ import com.example.newsmanager.domain.auth.User;
 import com.example.newsmanager.domain.auth.UserRole;
 import com.example.newsmanager.domain.auth.RegisterRequest;
 import com.example.newsmanager.repositories.UserRepository;
+import com.example.newsmanager.security.UserDetailsImpl;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -31,7 +36,7 @@ public class UserService {
         newUser.setUsername(registerRequest.username());
         newUser.setEmail(registerRequest.email());
         newUser.setPassword(passwordEncoder.encode(registerRequest.password()));
-        newUser.setRole(UserRole.READER);
+        newUser.setRole(registerRequest.role());
 
         return userRepository.save(newUser);
     }
@@ -47,5 +52,12 @@ public class UserService {
         
         user.setRole(UserRole.WRITER);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilizador não encontrado"));
+        return new UserDetailsImpl(user);
     }
 }

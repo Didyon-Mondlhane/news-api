@@ -2,9 +2,10 @@ package com.example.newsmanager.controllers;
 
 import com.example.newsmanager.domain.auth.*;
 import com.example.newsmanager.security.JwtService;
+import com.example.newsmanager.security.UserDetailsImpl;
 import com.example.newsmanager.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.naming.AuthenticationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,24 +15,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtService jwtService;
+    public AuthController(AuthenticationManager authenticationManager,
+                        UserService userService,
+                        JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) throws AuthenticationException {
+        var authentication = new UsernamePasswordAuthenticationToken(
                 loginRequest.email(), 
                 loginRequest.password());
         
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var user = (User) auth.getPrincipal();
-        var token = jwtService.generateToken(user);
+        var auth = authenticationManager.authenticate(authentication);
+        var user = (UserDetailsImpl) auth.getPrincipal();
+        var token = jwtService.generateToken(user.getUser());
 
         return ResponseEntity.ok(new LoginResponse(token));
     }
