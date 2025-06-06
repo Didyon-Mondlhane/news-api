@@ -35,4 +35,39 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
+          
+                .requestMatchers(
+                    "/auth/login",
+                    "/auth/register",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+                ).permitAll()
+                
+                .requestMatchers(
+                    "/news/get/**",          
+                    "/categories/get/**",    
+                    "/comments/**",        
+                    "/reactions/**"          
+                ).hasRole("READER")
+                
+                .requestMatchers(
+                    "/news/create",          
+                    "/news/update/**",       
+                    "/news/delete/**",       
+                    "/categories/manage/**"  
+                ).hasRole("WRITER")
+                
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
+
+
 }
