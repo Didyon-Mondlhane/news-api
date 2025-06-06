@@ -21,6 +21,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    public CategoryDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        return new CategoryDTO(category);
+    }
+
     @Transactional
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         if (categoryRepository.existsByName(categoryDTO.name())) {
