@@ -24,19 +24,19 @@ public class NewsController {
         return ResponseEntity.ok(newsList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<NewsResponseDTO> getNewsById(@PathVariable String id) {
         NewsResponseDTO news = newsService.getById(id);
         return ResponseEntity.ok(news);
     }
 
-    @PostMapping
+    @PostMapping ("/create")
     public ResponseEntity<NewsResponseDTO> createNews(@RequestBody @Valid NewsRequestDTO dto) {
         NewsResponseDTO createdNews = newsService.createNews(dto);
         return ResponseEntity.ok(createdNews);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<NewsResponseDTO> updateNews(
         @PathVariable String id,
         @RequestBody @Valid NewsRequestDTO dto
@@ -45,7 +45,7 @@ public class NewsController {
         return ResponseEntity.ok(updatedNews);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteNews(@PathVariable String id) {
         newsService.deleteNews(id);
         return ResponseEntity.noContent().build();

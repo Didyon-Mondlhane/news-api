@@ -20,7 +20,7 @@ public class NewsService {
         this.repository = repository;
     }
 
-// ...existing code...
+
     public List<NewsResponseDTO> getAll() {
         return repository.findAll().stream()
                 .map(news -> new NewsResponseDTO(news, List.of()))
@@ -62,7 +62,7 @@ public NewsResponseDTO createNews(NewsRequestDTO dto) {
         News updatedNews = repository.save(news);
         return new NewsResponseDTO(updatedNews, List.of());
     }
-// ...existing code...
+
     
     @Transactional
     public void deleteNews(String id) {
