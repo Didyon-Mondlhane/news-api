@@ -24,7 +24,7 @@ public class UserService {
         }
 
         if (userRepository.existsByUsername(registerRequest.username())) {
-            throw new RuntimeException("O email já está em uso!");
+            throw new RuntimeException("O nome de utilizador já está em uso!");
         }
 
         User newUser = new User();
