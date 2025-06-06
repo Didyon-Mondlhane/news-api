@@ -1,5 +1,6 @@
 package com.example.newsmanager.domain.auth;
 
-public class UserRole {
-    
+public enum UserRole {
+    READER,
+    WRITER
 }
