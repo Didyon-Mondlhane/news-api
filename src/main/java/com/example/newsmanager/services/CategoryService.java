@@ -14,6 +14,13 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     // Métodos CRUD serão implementados aqui
+    public List<CategoryDTO> getAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryDTO::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         if (categoryRepository.existsByName(categoryDTO.name())) {
