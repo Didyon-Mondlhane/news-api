@@ -3,7 +3,7 @@ package com.example.newsmanager.domain.news;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.List;
+//import java.util.List;
 
 @Entity
 @Getter
@@ -47,8 +47,8 @@ public class News {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public List<NewsImage> getImage() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getImage'");
-    }
-}
+//     public List<NewsImage> getImage() {
+    
+//         throw new UnsupportedOperationException("Unimplemented method 'getImage'");
+//     }
+ }

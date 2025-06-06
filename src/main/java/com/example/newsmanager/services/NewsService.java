@@ -20,31 +20,32 @@ public class NewsService {
         this.repository = repository;
     }
 
+// ...existing code...
     public List<NewsResponseDTO> getAll() {
         return repository.findAll().stream()
-                .map(news -> new NewsResponseDTO(news, mapImages(news.getImage())))
+                .map(news -> new NewsResponseDTO(news, List.of()))
                 .collect(Collectors.toList());
     }
 
     public NewsResponseDTO getById(String id) {
         News news = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("News not found"));
-        return new NewsResponseDTO(news, mapImages(news.getImage()));
+        return new NewsResponseDTO(news, List.of());
     }
 
     @Transactional
-    public NewsResponseDTO createNews(NewsRequestDTO dto) {
-        News news = News.builder()
-                .title(dto.title())
-                .subtitle(dto.subtitle())
-                .content(dto.content())
-                .imageUrl(dto.imageUrl())
-                .authorId(dto.authorId())
-                .category(dto.category())
-                .build();
-        News savedNews = repository.save(news);
-        return new NewsResponseDTO(savedNews, List.of());
-    }
+public NewsResponseDTO createNews(NewsRequestDTO dto) {
+    News news = News.builder()
+            .title(dto.title())
+            .subtitle(dto.subtitle())
+            .content(dto.content())
+            .imageUrl(dto.imageUrl())
+            .authorId(dto.authorId())
+            .category(dto.category())
+            .build();
+    News savedNews = repository.save(news);
+    return new NewsResponseDTO(savedNews, List.of());
+}
 
     @Transactional
     public NewsResponseDTO updateNews(String id, NewsRequestDTO dto) {
@@ -59,9 +60,10 @@ public class NewsService {
         news.setCategory(dto.category());
 
         News updatedNews = repository.save(news);
-        return new NewsResponseDTO(updatedNews, mapImages(updatedNews.getImage()));
+        return new NewsResponseDTO(updatedNews, List.of());
     }
-
+// ...existing code...
+    
     @Transactional
     public void deleteNews(String id) {
         repository.deleteById(id);
