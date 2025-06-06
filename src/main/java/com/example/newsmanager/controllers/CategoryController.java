@@ -2,10 +2,10 @@ package com.example.newsmanager.controllers;
 
 import com.example.newsmanager.domain.category.CategoryDTO;
 import com.example.newsmanager.services.CategoryService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -13,19 +13,15 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
+    // 1. Injeção de dependência
     private final CategoryService categoryService;
 
-    // Injeção de dependência via construtor
+    // 2. Construtor
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-    @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(
-            @RequestBody @Valid CategoryDTO categoryDTO) {
-        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
-    }
+    // 3. Métodos públicos ordenados por tipo de operação (GET, POST, PUT, DELETE)
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -39,10 +35,17 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
+    @PostMapping
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
+        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
             @PathVariable Long id,
-            @RequestBody @Valid CategoryDTO categoryDTO) {
+            @RequestBody @Valid CategoryDTO categoryDTO
+    ) {
         CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok(updatedCategory);
     }
