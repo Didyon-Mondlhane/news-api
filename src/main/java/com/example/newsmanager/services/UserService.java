@@ -41,5 +41,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
     }
 
-
+    public void promoteToWriter(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
+        
+        user.setRole(UserRole.WRITER);
+        userRepository.save(user);
+    }
 }
