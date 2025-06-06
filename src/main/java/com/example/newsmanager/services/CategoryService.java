@@ -53,4 +53,12 @@ public class CategoryService {
         Category updatedCategory = categoryRepository.save(category);
         return new CategoryDTO(updatedCategory);
     }
+
+    @Transactional
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Category not found");
+        }
+        categoryRepository.deleteById(id);
+    }
 }
