@@ -1,7 +1,10 @@
 package com.example.newsmanager.domain.comment;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record CreateCommentDTO(
-    String content,
-    Long newsId,
+    @NotBlank String content,
+    @NotNull Long newsId,
     Long parentId
 ) {}
