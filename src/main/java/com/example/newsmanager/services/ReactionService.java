@@ -57,9 +57,10 @@ public class ReactionService {
         return toResponseDTO(saved);
     }
 
+    
     @Transactional
-   public ReactionResponseDTO updateReaction(ReactionRequestDTO dto) {
-    Reaction reaction = repository.findByUserIdAndNewsId(dto.userId(), dto.newsId())
+    public ReactionResponseDTO updateReaction(ReactionRequestDTO dto) {
+    Reaction reaction = repository.findById(dto.id())
             .orElseThrow(() -> new RuntimeException("Reação não encontrada para atualizar"));
 
     reaction.setType(dto.type());
