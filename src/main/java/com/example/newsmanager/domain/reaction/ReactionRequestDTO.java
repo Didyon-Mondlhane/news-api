@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotNull;
 public record ReactionRequestDTO(
     @NotNull ReactionType type,
     @NotNull Long userId,
-    @NotNull Long newsId
+    @NotNull String newsId
 ) {}

@@ -30,5 +30,5 @@ public class Reaction {
     private Long userId; // FK para User
 
     @Column(nullable = false)
-    private Long newsId; // FK para News
+    private String newsId; // FK para News
 }

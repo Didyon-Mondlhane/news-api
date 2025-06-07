@@ -8,5 +8,5 @@ public record ReactionResponseDTO(
     ReactionType type,
     LocalDateTime createdAt,
     Long userId,
-    Long newsId
+    String newsId
 ) {}
