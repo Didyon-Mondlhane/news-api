@@ -6,25 +6,10 @@ import java.util.List;
 public record CommentDTO(
     Long id,
     String content,
-    LocalDateTime createdAt,
-    LocalDateTime updatedAt,
+    Long userId,
+    String username,
     Long newsId,
-    Long authorId,
     Long parentId,
+    LocalDateTime createdAt,
     List<CommentDTO> replies
-) {
-    public CommentDTO(Comment comment) {
-        this(
-            comment.getId(),
-            comment.getContent(),
-            comment.getCreatedAt(),
-            comment.getUpdatedAt(),
-            comment.getNews() != null ? comment.getNews().getId() : null,
-            comment.getAuthor() != null ? comment.getAuthor().getId() : null,
-            comment.getParent() != null ? comment.getParent().getId() : null,
-            comment.getReplies() != null ? 
-                comment.getReplies().stream().map(CommentDTO::new).toList() : 
-                List.of()
-        );
-    }
-}
+) {}
