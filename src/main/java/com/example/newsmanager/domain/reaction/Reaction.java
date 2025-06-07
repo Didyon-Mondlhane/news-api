@@ -1,5 +1,34 @@
 package com.example.newsmanager.domain.reaction;
 
+import jakarta.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+@Entity
+@Getter
+@Setter
+
+@Table(name = "reactions")
 public class Reaction {
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReactionType type;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private Long userId; // FK para User
+
+    @Column(nullable = false)
+    private Long newsId; // FK para News
 }
