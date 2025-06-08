@@ -1,8 +1,6 @@
 package com.example.newsmanager.services;
 
 import com.example.newsmanager.domain.news.News;
-import com.example.newsmanager.domain.news.NewsImage;
-import com.example.newsmanager.domain.news.NewsImageDTO;
 import com.example.newsmanager.domain.news.NewsRequestDTO;
 import com.example.newsmanager.domain.news.NewsResponseDTO;
 import com.example.newsmanager.repositories.NewsRepository;
@@ -63,16 +61,9 @@ public NewsResponseDTO createNews(NewsRequestDTO dto) {
         return new NewsResponseDTO(updatedNews, List.of());
     }
 
-    
     @Transactional
     public void deleteNews(String id) {
         repository.deleteById(id);
     }
 
-    private List<NewsImageDTO> mapImages(List<NewsImage> images) {
-        if (images == null) return List.of();
-        return images.stream()
-                .map(img -> new NewsImageDTO(img.getId(), img.getImageUrl()))
-                .collect(Collectors.toList());
-    }
 }
