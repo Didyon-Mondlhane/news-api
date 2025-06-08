@@ -8,4 +8,5 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Reaction> findByNewsId(String newsId);
     List<Reaction> findByUserId(Long userId);
     boolean existsByUserIdAndNewsId(Long userId, String newsId);
+
 }

@@ -1,13 +1,10 @@
 package com.example.newsmanager.domain.news;
 
-import jakarta.validation.constraints.NotBlank;
-
 public record NewsRequestDTO(
-    @NotBlank String title,
+    String title,
     String subtitle,
-    @NotBlank String content,
+    String content,
     String imageUrl,
-    @NotBlank String authorId,
-    @NotBlank String category
-) {
-}
+    Long authorId,  
+    String categoryName  
+) {}

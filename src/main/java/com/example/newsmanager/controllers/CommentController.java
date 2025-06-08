@@ -18,19 +18,17 @@ public class CommentController {
     }
 
     @GetMapping("/news/{newsId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByNews(@PathVariable String newsId) {
-        List<CommentDTO> comments = commentService.getByNewsId(newsId);
-        return ResponseEntity.ok(comments);
+    public ResponseEntity<List<CommentDTO>> getByNewsId(@PathVariable String newsId) {
+        return ResponseEntity.ok(commentService.getByNewsId(newsId));
     }
 
     @PostMapping
-    public ResponseEntity<CommentDTO> createComment(@RequestBody @Valid CommentDTO commentDTO) {
-        CommentDTO createdComment = commentService.create(commentDTO);
-        return ResponseEntity.ok(createdComment);
+    public ResponseEntity<CommentDTO> create(@RequestBody @Valid CommentDTO commentDTO) {
+        return ResponseEntity.ok(commentService.create(commentDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         commentService.delete(id);
         return ResponseEntity.noContent().build();
     }

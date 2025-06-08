@@ -3,6 +3,10 @@ package com.example.newsmanager.services;
 import com.example.newsmanager.domain.reaction.Reaction;
 import com.example.newsmanager.domain.reaction.ReactionDTO;
 import com.example.newsmanager.repositories.ReactionRepository;
+import com.example.newsmanager.repositories.UserRepository;
+import com.example.newsmanager.repositories.NewsRepository;
+import com.example.newsmanager.domain.auth.User;
+import com.example.newsmanager.domain.news.News;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -10,39 +14,47 @@ import java.util.List;
 
 @Service
 public class ReactionService {
+    private final ReactionRepository repository;
+    private final UserRepository userRepository;
+    private final NewsRepository newsRepository;
 
-    private final ReactionRepository reactionRepository;
-
-    public ReactionService(ReactionRepository reactionRepository) {
-        this.reactionRepository = reactionRepository;
+    public ReactionService(ReactionRepository repository, UserRepository userRepository, NewsRepository newsRepository) {
+        this.repository = repository;
+        this.userRepository = userRepository;
+        this.newsRepository = newsRepository;
     }
 
     @Transactional
-    public ReactionDTO addReaction(ReactionDTO reactionDTO) {
-        if (reactionRepository.existsByUserIdAndNewsId(reactionDTO.userId(), reactionDTO.newsId())) {
-            throw new IllegalArgumentException("Utilizador já reagiu a esta notícia");
+    public ReactionDTO create(ReactionDTO dto) {
+        if (repository.existsByUserIdAndNewsId(dto.userId(), dto.newsId())) {
+            throw new RuntimeException("User already reacted to this news");
         }
 
+        User user = userRepository.findById(dto.userId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        News news = newsRepository.findById(dto.newsId())
+            .orElseThrow(() -> new RuntimeException("News not found"));
+
         Reaction reaction = new Reaction();
-        reaction.setType(reactionDTO.type());
-        reaction.setNewsId(reactionDTO.newsId());
-        reaction.setUserId(reactionDTO.userId());
-        
-        Reaction savedReaction = reactionRepository.save(reaction);
+        reaction.setType(dto.type());
+        reaction.setUser(user);
+        reaction.setNews(news);
+
+        Reaction savedReaction = repository.save(reaction);
         return new ReactionDTO(savedReaction);
     }
 
-    @Transactional
-    public void removeReaction(Long id) {
-        if (!reactionRepository.existsById(id)) {
-            throw new IllegalArgumentException("Reacção não encontrada");
-        }
-        reactionRepository.deleteById(id);
-    }
-
-    public List<ReactionDTO> getReactionsByNews(String newsId) {
-        return reactionRepository.findByNewsId(newsId).stream()
+    public List<ReactionDTO> getByNewsId(String newsId) {
+        return repository.findByNewsId(newsId).stream()
                 .map(ReactionDTO::new)
                 .toList();
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Reaction not found");
+        }
+        repository.deleteById(id);
     }
 }

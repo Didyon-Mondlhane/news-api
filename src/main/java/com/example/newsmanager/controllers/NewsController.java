@@ -19,35 +19,30 @@ public class NewsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NewsResponseDTO>> getAllNews() {
-        List<NewsResponseDTO> newsList = newsService.getAll();
-        return ResponseEntity.ok(newsList);
+    public ResponseEntity<List<NewsResponseDTO>> getAll() {
+        return ResponseEntity.ok(newsService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsResponseDTO> getNewsById(@PathVariable String id) {
-        NewsResponseDTO news = newsService.getById(id);
-        return ResponseEntity.ok(news);
+    public ResponseEntity<NewsResponseDTO> getById(@PathVariable String id) {
+        return ResponseEntity.ok(newsService.getById(id));
     }
 
-    @PostMapping ("/create")
-    public ResponseEntity<NewsResponseDTO> createNews(@RequestBody @Valid NewsRequestDTO dto) {
-        NewsResponseDTO createdNews = newsService.createNews(dto);
-        return ResponseEntity.ok(createdNews);
+    @PostMapping
+    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid NewsRequestDTO dto) {
+        return ResponseEntity.ok(newsService.create(dto));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<NewsResponseDTO> updateNews(
+    @PutMapping("/{id}")
+    public ResponseEntity<NewsResponseDTO> update(
         @PathVariable String id,
-        @RequestBody @Valid NewsRequestDTO dto
-    ) {
-        NewsResponseDTO updatedNews = newsService.updateNews(id, dto);
-        return ResponseEntity.ok(updatedNews);
+        @RequestBody @Valid NewsRequestDTO dto) {
+        return ResponseEntity.ok(newsService.update(id, dto));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteNews(@PathVariable String id) {
-        newsService.deleteNews(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        newsService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

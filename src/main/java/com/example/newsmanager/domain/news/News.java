@@ -1,9 +1,14 @@
 package com.example.newsmanager.domain.news;
 
+import com.example.newsmanager.domain.auth.User;
+import com.example.newsmanager.domain.category.Category;
+import com.example.newsmanager.domain.comment.Comment;
+import com.example.newsmanager.domain.reaction.Reaction;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-//import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,11 +36,21 @@ public class News {
 
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private String authorId; // FK to Author entity
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
-    @Column(nullable = false)
-    private String category; // FK to Category entity
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Reaction> reactions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -46,9 +61,4 @@ public class News {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-//     public List<NewsImage> getImage() {
-    
-//         throw new UnsupportedOperationException("Unimplemented method 'getImage'");
-//     }
- }
+}

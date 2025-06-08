@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -17,37 +16,40 @@ public class CategoryService {
         this.repository = repository;
     }
 
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryDTO> getAll() {
         return repository.findAll().stream()
                 .map(CategoryDTO::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public CategoryDTO getCategoryById(Long id) {
+    public CategoryDTO getById(Long id) {
         Category category = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         return new CategoryDTO(category);
     }
 
     @Transactional
-    public CategoryDTO createCategory(CategoryDTO dto) {
+    public CategoryDTO create(CategoryDTO dto) {
         if (repository.existsByName(dto.name())) {
-            throw new RuntimeException("O nome da categoria já existe");
+            throw new RuntimeException("Category name already exists");
         }
 
-        Category category = Category.builder()
-                .name(dto.name())
-                .description(dto.description())
-                .build();
+        Category category = new Category();
+        category.setName(dto.name());
+        category.setDescription(dto.description());
 
         Category savedCategory = repository.save(category);
         return new CategoryDTO(savedCategory);
     }
 
     @Transactional
-    public CategoryDTO updateCategory(Long id, CategoryDTO dto) {
+    public CategoryDTO update(Long id, CategoryDTO dto) {
         Category category = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        if (!category.getName().equals(dto.name()) && repository.existsByName(dto.name())) {
+            throw new RuntimeException("Category name already exists");
+        }
 
         category.setName(dto.name());
         category.setDescription(dto.description());
@@ -57,9 +59,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(Long id) {
+    public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Categoria não encontrada");
+            throw new RuntimeException("Category not found");
         }
         repository.deleteById(id);
     }

@@ -1,5 +1,10 @@
 package com.example.newsmanager.domain.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.newsmanager.domain.news.News;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,4 +23,8 @@ public class Category {
     private String name;
     
     private String description;
+
+@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<News> newsList = new ArrayList<>();
 }
